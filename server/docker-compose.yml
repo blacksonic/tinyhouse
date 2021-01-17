@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  mongo_host:
+    image: mongo:4.4
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: main
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
