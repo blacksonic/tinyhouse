@@ -13,7 +13,7 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === 'development' ? false : true,
 };
 
-const logInViaGoogle = async (code: string, token: string, db: Database, res: Response): Promise<User | null> => {
+const logInViaGoogle = async (code: string, token: string, db: Database, res: Response): Promise<User | undefined> => {
   const { user } = await Google.logIn(code);
 
   if (!user) {
@@ -82,16 +82,14 @@ const logInViaGoogle = async (code: string, token: string, db: Database, res: Re
   return viewer;
 };
 
-const logInViaCookie = async (token: string, db: Database, req: Request, res: Response): Promise<User | null> => {
-  const viewer = await db.users.findOne({ _id: req.signedCookies.viewer });
+const logInViaCookie = async (token: string, db: Database, req: Request, res: Response): Promise<User | undefined> => {
+  const updateRes = await db.users.findOneAndUpdate(
+    { _id: req.signedCookies.viewer },
+    { $set: { token } },
+    { returnOriginal: false },
+  );
 
-  // const updateRes = await db.users.findOneAndUpdate(
-  //   { _id: req.signedCookies.viewer },
-  //   { $set: { token } },
-  //   { returnOriginal: false },
-  // );
-
-  // const viewer = updateRes.value;
+  const viewer = updateRes.value;
 
   if (!viewer) {
     res.clearCookie('viewer', cookieOptions);
@@ -120,7 +118,7 @@ export const viewerResolvers: IResolvers = {
         const code = input ? input.code : null;
         const token = crypto.randomBytes(16).toString('hex');
 
-        const viewer: User | null = code
+        const viewer: User | undefined = code
           ? await logInViaGoogle(code, token, db, res)
           : await logInViaCookie(token, db, req, res);
 
