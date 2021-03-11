@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { ApolloClient, ApolloProvider, ApolloLink, InMemoryCache, useMutation, HttpLink, concat } from '@apollo/client';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Layout, Affix, Spin } from 'antd';
+import { StripeProvider, Elements } from 'react-stripe-elements';
 import reportWebVitals from './reportWebVitals';
 import { Home, Host, Listing, Listings, NotFound, User, Login, AppHeader, Stripe } from './sections';
 import { Viewer } from './lib/types';
@@ -14,7 +15,6 @@ import './styles/index.css';
 const httpLink = new HttpLink({ uri: '/api' });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
-  // add the authorization to the headers
   operation.setContext({
     headers: {
       'X-CSRF-TOKEN': sessionStorage.getItem('token') || null,
@@ -74,34 +74,44 @@ const App = () => {
   ) : null;
 
   return (
-    <Router>
-      <Affix offsetTop={0} className="app__affix-header">
-        <AppHeader viewer={viewer} setViewer={setViewer} />
-      </Affix>
-      <Layout id="app">
-        {logInErrorBannerElement}
-        {!loading && (
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/host" render={(props) => <Host {...props} viewer={viewer} />} />
-            <Route exact path="/listing/:id" component={Listing} />
-            <Route exact path="/listings/:location?" component={Listings} />
-            <Route exact path="/login" render={(props) => <Login {...props} setViewer={setViewer} />} />
-            <Route
-              exact
-              path="/user/:id"
-              render={(props) => <User {...props} viewer={viewer} setViewer={setViewer} />}
-            />
-            <Route
-              exact
-              path="/stripe"
-              render={(props) => <Stripe {...props} viewer={viewer} setViewer={setViewer} />}
-            />
-            <Route component={NotFound} />
-          </Switch>
-        )}
-      </Layout>
-    </Router>
+    <StripeProvider apiKey={process.env.REACT_APP_S_PUBLISHABLE_KEY as string}>
+      <Router>
+        <Affix offsetTop={0} className="app__affix-header">
+          <AppHeader viewer={viewer} setViewer={setViewer} />
+        </Affix>
+        <Layout id="app">
+          {logInErrorBannerElement}
+          {!loading && (
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/host" render={(props) => <Host {...props} viewer={viewer} />} />
+              <Route
+                exact
+                path="/listing/:id"
+                render={(props) => (
+                  <Elements>
+                    <Listing {...props} viewer={viewer} />
+                  </Elements>
+                )}
+              />
+              <Route exact path="/listings/:location?" component={Listings} />
+              <Route exact path="/login" render={(props) => <Login {...props} setViewer={setViewer} />} />
+              <Route
+                exact
+                path="/user/:id"
+                render={(props) => <User {...props} viewer={viewer} setViewer={setViewer} />}
+              />
+              <Route
+                exact
+                path="/stripe"
+                render={(props) => <Stripe {...props} viewer={viewer} setViewer={setViewer} />}
+              />
+              <Route component={NotFound} />
+            </Switch>
+          )}
+        </Layout>
+      </Router>
+    </StripeProvider>
   );
 };
 
