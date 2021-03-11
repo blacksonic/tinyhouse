@@ -39,7 +39,8 @@ const initialViewer: Viewer = {
 
 const App = () => {
   const [viewer, setViewer] = useState<Viewer>(initialViewer);
-  const [logIn, { error, loading }] = useMutation<LogInData, LogInVariables>(LOG_IN, {
+  const [isLoginCompleted, setIsLoginCompleted] = useState<boolean>(false);
+  const [logIn, { error }] = useMutation<LogInData, LogInVariables>(LOG_IN, {
     onCompleted: (data) => {
       if (data && data.logIn) {
         setViewer(data.logIn);
@@ -49,6 +50,8 @@ const App = () => {
         } else {
           sessionStorage.removeItem('token');
         }
+
+        setIsLoginCompleted(true);
       }
     },
   });
@@ -73,6 +76,27 @@ const App = () => {
     <ErrorBanner description="We weren't able to verify if you were logged in. Please try again later!" />
   ) : null;
 
+  const switchElement = isLoginCompleted ? (
+    <Switch>
+      <Route exact path="/" component={Home} />
+      <Route exact path="/host" render={(props) => <Host {...props} viewer={viewer} />} />
+      <Route
+        exact
+        path="/listing/:id"
+        render={(props) => (
+          <Elements>
+            <Listing {...props} viewer={viewer} />
+          </Elements>
+        )}
+      />
+      <Route exact path="/listings/:location?" component={Listings} />
+      <Route exact path="/login" render={(props) => <Login {...props} setViewer={setViewer} />} />
+      <Route exact path="/user/:id" render={(props) => <User {...props} viewer={viewer} setViewer={setViewer} />} />
+      <Route exact path="/stripe" render={(props) => <Stripe {...props} viewer={viewer} setViewer={setViewer} />} />
+      <Route component={NotFound} />
+    </Switch>
+  ) : null;
+
   return (
     <StripeProvider apiKey={process.env.REACT_APP_S_PUBLISHABLE_KEY as string}>
       <Router>
@@ -81,34 +105,7 @@ const App = () => {
         </Affix>
         <Layout id="app">
           {logInErrorBannerElement}
-          {!loading && (
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/host" render={(props) => <Host {...props} viewer={viewer} />} />
-              <Route
-                exact
-                path="/listing/:id"
-                render={(props) => (
-                  <Elements>
-                    <Listing {...props} viewer={viewer} />
-                  </Elements>
-                )}
-              />
-              <Route exact path="/listings/:location?" component={Listings} />
-              <Route exact path="/login" render={(props) => <Login {...props} setViewer={setViewer} />} />
-              <Route
-                exact
-                path="/user/:id"
-                render={(props) => <User {...props} viewer={viewer} setViewer={setViewer} />}
-              />
-              <Route
-                exact
-                path="/stripe"
-                render={(props) => <Stripe {...props} viewer={viewer} setViewer={setViewer} />}
-              />
-              <Route component={NotFound} />
-            </Switch>
-          )}
+          {switchElement}
         </Layout>
       </Router>
     </StripeProvider>
