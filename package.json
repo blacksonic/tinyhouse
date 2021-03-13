@@ -1,4 +1,6 @@
 {
+  "name": "tinyhouse",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "prepare": "npm run postinstall:client",
