@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "prepare": "npm run postinstall:client",
+    "postinstall": "npm run postinstall:server",
+    "postinstall:server": "cd server/ && npm install",
+    "postinstall:client": "cd client/ && npm install",
+    "start": "node dist/index.js",
+    "start:dev": "concurrently --kill-others-on-fail \"npm run start:dev:server\" \"npm run start:dev:client\"",
+    "start:dev:server": "cd server/ && npm start",
+    "start:dev:client": "cd client/ && npm start",
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "cd server/ && npm run build && mv build/ ../build/",
+    "build:client": "cd client/ && npm run build && mv build/ ../build/client/"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
