@@ -1,4 +1,5 @@
 {
+  "license": "MIT",
   "scripts": {
     "prepare": "npm run postinstall:client",
     "postinstall": "npm run postinstall:server",
@@ -15,5 +16,8 @@
   "dependencies": {},
   "devDependencies": {
     "concurrently": "^6.0.0"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
