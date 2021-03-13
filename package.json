@@ -5,9 +5,9 @@
   "scripts": {
     "prepare": "npm run postinstall:client",
     "postinstall": "npm run postinstall:server",
-    "postinstall:server": "cd server/ && npm install",
-    "postinstall:client": "cd client/ && npm install",
-    "start": "node dist/index.js",
+    "postinstall:server": "cd server/ && npm ci",
+    "postinstall:client": "cd client/ && npm ci",
+    "start": "node build/index.js",
     "start:dev": "concurrently --kill-others-on-fail \"npm run start:dev:server\" \"npm run start:dev:client\"",
     "start:dev:server": "cd server/ && npm start",
     "start:dev:client": "cd client/ && npm start",
