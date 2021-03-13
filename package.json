@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "npm run postinstall:server && npm run postinstall:client",
-    "postinstall:server": "npm ci --prefix server",
-    "postinstall:client": "npm ci --prefix client",
+    "postinstall:server": "NPM_CONFIG_PRODUCTION=false npm ci --prefix server",
+    "postinstall:client": "NPM_CONFIG_PRODUCTION=false npm ci --prefix client",
     "start": "node build/index.js",
     "start:dev": "concurrently --kill-others-on-fail \"npm run start:dev:server\" \"npm run start:dev:client\"",
     "start:dev:server": "cd server/ && npm start",
