@@ -4,16 +4,15 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "npm run postinstall:server && npm run postinstall:client",
-    "postinstall:server": "NPM_CONFIG_PRODUCTION=false npm ci --prefix server",
-    "postinstall:client": "NPM_CONFIG_PRODUCTION=false npm ci --prefix client",
+    "postinstall:server": "npm ci --prefix server",
+    "postinstall:client": "npm ci --prefix client",
     "start": "node build/index.js",
     "start:dev": "concurrently --kill-others-on-fail \"npm run start:dev:server\" \"npm run start:dev:client\"",
-    "start:dev:server": "cd server/ && npm start",
-    "start:dev:client": "cd client/ && npm start",
-    "build": "npm run build:server && npm run build:client",
+    "start:dev:server": "npm start --prefix server",
+    "start:dev:client": "npm start --prefix client",
+    "build": "npm run build:server && npm run build:client && node build/scripts/seed.js",
     "build:server": "npm run build --prefix server && mv ./server/build/ ./build/",
-    "build:client": "npm run build --prefix client && mv ./client/build/ ./build/client/",
-    "heroku-postbuild": "node build/scripts/seed.js"
+    "build:client": "npm run build --prefix client && mv ./client/build/ ./build/client/"
   },
   "dependencies": {},
   "devDependencies": {
