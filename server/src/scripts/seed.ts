@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config({});
+
 import { connectDatabase } from '../database';
 import { listings as defaultListings } from './listings';
 import { users as defaultUsers } from './users';

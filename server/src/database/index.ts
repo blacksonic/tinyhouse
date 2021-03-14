@@ -2,10 +2,8 @@ import { MongoClient } from 'mongodb';
 import { config } from '../config';
 import { Database, Booking, Listing, User } from '../lib/types';
 
-const url = `mongodb://${config.db.user}:${config.db.password}@${config.db.host}`;
-
 export const connectDatabase = async (): Promise<Database> => {
-  const client = await MongoClient.connect(url, {
+  const client = await MongoClient.connect(config.db.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     serverSelectionTimeoutMS: 5000,

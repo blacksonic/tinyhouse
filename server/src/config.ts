@@ -4,5 +4,6 @@ export const config = {
     host: process.env.DB_HOST || 'localhost:27017',
     user: process.env.DB_USER || 'admin',
     password: process.env.DB_PASSWORD || 'secret',
+    url: process.env.DB_URL || '',
   },
 };

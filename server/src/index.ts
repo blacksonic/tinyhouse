@@ -1,12 +1,12 @@
+import dotenv from 'dotenv';
+dotenv.config({});
+
 import express, { Application } from 'express';
 import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import compression from 'compression';
-
-dotenv.config({});
 
 import { typeDefs, resolvers } from './graphql';
 import { Database } from './lib/types';
