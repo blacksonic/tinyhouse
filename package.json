@@ -10,7 +10,7 @@
     "start:dev": "concurrently --kill-others-on-fail \"npm run start:dev:server\" \"npm run start:dev:client\"",
     "start:dev:server": "npm start --prefix server",
     "start:dev:client": "npm start --prefix client",
-    "build": "npm run build:server && npm run build:client && cp -R server/node_modules/* node_modules",
+    "build": "npm run build:server && npm run build:client && cp -R server/node_modules/* build/node_modules",
     "build:server": "npm run build --prefix server && mv ./server/build/ ./build/",
     "build:client": "npm run build --prefix client && mv ./client/build/ ./build/client/"
   },
