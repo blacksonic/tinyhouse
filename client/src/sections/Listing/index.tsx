@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Col, Layout, Row } from 'antd';
 import { Moment } from 'moment';
@@ -25,7 +25,8 @@ interface Props {
 const { Content } = Layout;
 const PAGE_LIMIT = 3;
 
-export const Listing = ({ viewer, match }: Props & RouteComponentProps<MatchParams>) => {
+export const Listing = ({ viewer }: Props) => {
+  const { id } = useParams<MatchParams>();
   const [bookingsPage, setBookingsPage] = useState(1);
   const [checkInDate, setCheckInDate] = useState<Moment | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
@@ -33,7 +34,7 @@ export const Listing = ({ viewer, match }: Props & RouteComponentProps<MatchPara
 
   const { loading, data, error, refetch } = useQuery<ListingData, ListingVariables>(LISTING, {
     variables: {
-      id: match.params.id,
+      id,
       bookingsPage,
       limit: PAGE_LIMIT,
     },

@@ -10,7 +10,6 @@ import { LogIn as LogInData, LogInVariables } from '../../lib/graphql/mutations/
 import { ErrorBanner } from '../../lib/components';
 import { displaySuccessNotification, displayErrorMessage } from '../../lib/utils';
 
-// Image Assets
 import googleLogo from './assets/google_logo.jpg';
 
 const { Content } = Layout;
