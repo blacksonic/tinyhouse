@@ -22,10 +22,7 @@ export const createApp = (db: Database): Application => {
   app.use(express.json());
   app.use(cors());
   app.use(compression());
-  app.use(express.static(`${__dirname}/client`));
-  app.get('/*', (_req, res) => res.sendFile(`${__dirname}/client/index.html`));
   server.applyMiddleware({ app, path: '/api' });
-  app.get('/', (req, res) => res.send('hello world'));
   app.post('/statusDone', (req, res) =>
     res.send({
       name: 'xxx.png',
@@ -34,6 +31,8 @@ export const createApp = (db: Database): Application => {
       thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
     }),
   );
+  app.use(express.static(`${__dirname}/client`));
+  app.get('/*', (_req, res) => res.sendFile(`${__dirname}/client/index.html`));
 
   return app;
 };
