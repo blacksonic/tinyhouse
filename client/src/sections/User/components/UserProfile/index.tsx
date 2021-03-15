@@ -1,11 +1,13 @@
 import { Fragment } from 'react';
 import { Avatar, Button, Card, Divider, Typography, Tag } from 'antd';
 import { formatListingPrice, displaySuccessNotification, displayErrorMessage } from '../../../../lib/utils';
-import { useMutation } from '@apollo/client';
+import { useMutation, useApolloClient } from '@apollo/client';
 import { DISCONNECT_STRIPE } from '../../../../lib/graphql/mutations/';
 import { DisconnectStripe as DisconnectStripeData } from '../../../../lib/graphql/mutations/DisconnectStripe/__generated__/DisconnectStripe';
 import { User as UserData } from '../../../../lib/graphql/queries/User/__generated__/User';
 import { Viewer } from '../../../../lib/types';
+import { AUTH_URL_STRIPE } from '../../../../lib/graphql/queries';
+import { AuthUrlStripe as AuthUrlStripeData } from '../../../../lib/graphql/queries/AuthUrlStripe/__generated__/AuthUrlStripe';
 
 interface Props {
   user: UserData['user'];
@@ -17,9 +19,8 @@ interface Props {
 
 const { Paragraph, Text, Title } = Typography;
 
-const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_S_CLIENT_ID}&scope=read_write`;
-
 export const UserProfile = ({ user, viewer, viewerIsUser, setViewer, handleUserRefetch }: Props) => {
+  const client = useApolloClient();
   const [disconnectStripe, { loading }] = useMutation<DisconnectStripeData>(DISCONNECT_STRIPE, {
     onCompleted: (data) => {
       if (data && data.disconnectStripe) {
@@ -36,8 +37,12 @@ export const UserProfile = ({ user, viewer, viewerIsUser, setViewer, handleUserR
     },
   });
 
-  const redirectToStripe = () => {
-    window.location.href = stripeAuthUrl;
+  const redirectToStripe = async () => {
+    const { data } = await client.query<AuthUrlStripeData>({
+      query: AUTH_URL_STRIPE,
+    });
+
+    window.location.href = data.authUrlStripe;
   };
 
   const additionalDetails = user.hasWallet ? (

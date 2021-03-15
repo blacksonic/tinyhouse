@@ -78,8 +78,6 @@ export const Host = ({ viewer }: Props) => {
     delete input.state;
     delete input.postalCode;
 
-    console.log(input);
-
     hostListing({
       variables: {
         input,
