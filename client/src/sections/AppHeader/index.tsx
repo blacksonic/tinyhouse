@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import { Input, Layout } from 'antd';
 import { MenuItems } from './components';
 import { Viewer } from '../../lib/types';
 import { displayErrorMessage } from '../../lib/utils';
+import { useScrollToTop } from '../../lib/hooks';
 
 import logo from './assets/tinyhouse-logo.png';
 
@@ -15,8 +16,10 @@ interface Props {
   setViewer: (viewer: Viewer) => void;
 }
 
-export const AppHeader = withRouter(({ viewer, setViewer, history, location }: Props & RouteComponentProps) => {
+export const AppHeader = ({ viewer, setViewer }: Props) => {
   const [search, setSearch] = useState('');
+  const location = useLocation();
+  const history = useHistory();
 
   const onSearch = (value: string) => {
     const trimmedValue = value.trim();
@@ -27,6 +30,8 @@ export const AppHeader = withRouter(({ viewer, setViewer, history, location }: P
       displayErrorMessage('Please enter a valid search!');
     }
   };
+
+  useScrollToTop();
 
   useEffect(() => {
     const { pathname } = location;
@@ -66,4 +71,4 @@ export const AppHeader = withRouter(({ viewer, setViewer, history, location }: P
       </div>
     </Header>
   );
-});
+};
